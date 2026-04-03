@@ -679,7 +679,7 @@
         function moveToNext(input,idx){if(input.value.length===1){const inputs=input.parentElement.querySelectorAll('input');if(idx<inputs.length)inputs[idx].focus();}}
         async function verifyCode(){playSound('click');const inputs=document.querySelectorAll('#codeVerification input');let code='';inputs.forEach(i=>code+=i.value);if(code!==sessionStorage.getItem('resetCode')){playSound('error');showToast('Invalid code','error');return;}showPopup('<div class="text-center"><div class="loader mx-auto mb-4"></div><h3 class="font-display text-xl font-bold gradient-text mb-2">Updating Password</h3></div>');try{await new Promise(r=>setTimeout(r,1000));sessionStorage.clear();playSound('success');closePopup();showToast('Password updated successfully!','success');setTimeout(()=>showPage('loginPage'),1000);}catch(error){closePopup();playSound('error');showToast('Failed to update password','error');}}
 
-        async function initChatApp(){try{const user=await account.get();currentUser=user;const profiles=await databases.listDocuments(CONFIG.databaseId,CONFIG.collections.users,[Query.equal('userId',user.$id)]);if(profiles.documents.length>0){const p=profiles.documents[0];document.getElementById('navAvatar').src=p.avatar;document.getElementById('profileAvatar').src=p.avatar;document.getElementById('profileUsername').textContent=p.username;document.getElementById('bioInput').value=p.bio||'';document.getElementById('ageInput').value=p.age||'';document.getElementById('locationInput').value=p.location||'';soundsEnabled=p.soundsEnabled!==false;pmEnabled=p.pmEnabled!==false;document.getElementById('soundToggle').checked=soundsEnabled;document.getElementById('pmToggle').checked=pmEnabled;}loadEmojis();loadGifs();subscribeToMessages(); const lastGroup = localStorage.getItem('lastActiveGroup'); if (lastGroup) { joinGroup(lastGroup); } }catch(error){console.error('Chat init error:',error);showToast('Failed to load chat','error');}}
+        async function initChatApp(){try{const user=await account.get();currentUser=user;const profiles=await databases.listDocuments(CONFIG.databaseId,CONFIG.collections.users,[Query.equal('userId',user.$id)]);if(profiles.documents.length>0){const p=profiles.documents[0];document.getElementById('navAvatar').src=p.avatar;document.getElementById('profileAvatar').src=p.avatar;document.getElementById('profileUsername').textContent=p.username;document.getElementById('bioInput').value=p.bio||'';document.getElementById('ageInput').value=p.age||'';document.getElementById('locationInput').value=p.location||'';soundsEnabled=p.soundsEnabled!==false;pmEnabled=p.pmEnabled!==false;document.getElementById('soundToggle').checked=soundsEnabled;document.getElementById('pmToggle').checked=pmEnabled;}loadEmojis();loadGifs();subscribeToMessages();const lastGroup=localStorage.getItem('lastActiveGroup');if(lastGroup){joinGroup(lastGroup);}}catch(error){console.error('Chat init error:',error);showToast('Failed to load chat','error');}}
         function loadEmojis(){const g=document.getElementById('emojiGrid');g.innerHTML='';emojis.forEach(e=>{const b=document.createElement('button');b.className='text-2xl hover:scale-125 transition-transform p-2';b.textContent=e;b.onclick=()=>insertEmoji(e);g.appendChild(b);});}
         function loadGifs(){const g=document.getElementById('gifGrid');g.innerHTML='';sampleGifs.forEach(u=>{const i=document.createElement('img');i.className='w-full h-20 object-cover rounded-lg cursor-pointer hover:scale-105 transition-transform';i.src=u;i.onclick=()=>sendGif(u);g.appendChild(i);});}
         function toggleEmojiPicker(){document.getElementById('gifPicker').classList.add('hidden');document.getElementById('emojiPicker').classList.toggle('hidden');playSound('tab');}
@@ -723,12 +723,11 @@
             switchTab('groups');
         }
 
-                        async function joinGroup(groupType) {
+                                async function joinGroup(groupType) {
             playSound('click');
             currentGroup = groupType;
-            localStorage.setItem('lastActiveGroup', groupType);
             
-            // Save to LocalStorage for refresh
+            // Yaad rakhnay ke liye save karein
             localStorage.setItem('lastActiveGroup', groupType);
             
             // Hide Room List, Show Chat
